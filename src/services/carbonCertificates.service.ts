@@ -5,7 +5,7 @@ import { CarbonCertificate, CarbonCertificateStatus } from "@interfaces/carbonCe
 
 class CarbonCertificatesService {
   public async findAllAvailable(): Promise<CarbonCertificate[]> {
-    return carbonCertificatesModel.find({ owner: { $exists: true } });
+    return carbonCertificatesModel.find({ status: CarbonCertificateStatus.available });
   }
 
   public async findByUserId(userId: string): Promise<CarbonCertificate[]> {
