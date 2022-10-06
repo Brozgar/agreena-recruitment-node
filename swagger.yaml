@@ -1,32 +1,23 @@
 tags:
-- name: users
-  description: users API
+- name: auth
+  description: auth API
+- name: carbonCertificates
+  description: Carbon certificates API
 
 paths:
-# [GET] users
-  /users:
-    get:
-      tags:
-      - users
-      summary: Find All Users
-      responses:
-        200:
-          description: 'OK'
-        500:
-          description: 'Server Error'
-
-# [POST] users
+# [POST] signup
+  /signup:
     post:
       tags:
-      - users
-      summary: Add User
+        - auth
+      summary: Signup
       parameters:
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
+        - name: body
+          in: body
+          description: User data
+          required: true
+          schema:
+            $ref: '#/definitions/userRequestBody'
       responses:
         201:
           description: 'Created'
@@ -37,41 +28,89 @@ paths:
         500:
           description: 'Server Error'
 
-# [GET] users/id
-  /users/{id}:
-    get:
+# [POST] login
+  /login:
+    post:
       tags:
-      - users
-      summary: Find User By Id
+        - auth
+      summary: Login
       parameters:
-      - name: id
-        in: path
-        description: User Id
-        required: true
+        - name: body
+          in: body
+          description: User data
+          required: true
+          schema:
+            $ref: '#/definitions/userRequestBody'
       responses:
-        200:
-          description: 'OK'
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
         409:
           description: 'Conflict'
         500:
           description: 'Server Error'
 
-# [PUT] users/id
+# [POST] logout
+  /logout:
+    post:
+      tags:
+        - auth
+      summary: Logout
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [GET] carbon-certificates
+  /carbon-certificates:
+    get:
+      tags:
+        - carbonCertificates
+      summary: Find available certificates
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+# [GET] carbon-certificates/my
+  /carbon-certificates/my:
+    get:
+      tags:
+        - carbonCertificates
+      summary: Find current user's certificates
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+# [PUT] carbon-certificates/id
+  /carbon-certificates/{id}:
     put:
       tags:
-      - users
-      summary: Update User By Id
+        - carbonCertificates
+      summary: Transfer the certificate to another user
       parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
+        - name: id
+          in: path
+          description: Certificate ID
+          required: true
+        - name: body
+          in: body
+          description: Certificate data
+          required: true
+          schema:
+            type: object
+            properties:
+              toUserId:
+                type: string
       responses:
         200:
           description: 'OK'
@@ -82,31 +121,13 @@ paths:
         500:
           description: 'Server Error'
 
-# [DELETE] users/id
-    delete:
-      tags:
-      - users
-      summary: Delete User By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-      responses:
-        200:
-          description: 'OK'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
 # definitions
 definitions:
-  users:
+  userRequestBody:
     type: object
     required:
-        - email
-        - password
+      - email
+      - password
     properties:
       email:
         type: string
@@ -114,6 +135,32 @@ definitions:
       password:
         type: string
         description: user Password
+
+  carbonCertificate:
+    type: object
+    required:
+        - email
+        - password
+    properties:
+      _id:
+        type: string
+        description: certificate ID
+      country:
+        type: string
+        description: country of the certificate
+      status:
+        type: string
+        description: certificate status
+        enum:
+          - available
+          - owned
+          - transferred
+      owner:
+        type: object
+        properties:
+          _id:
+            type: string
+            description: user ID
 
 schemes:
  - https
