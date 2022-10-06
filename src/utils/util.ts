@@ -2,7 +2,7 @@
  * @method isEmpty
  * @param {String | Number | Object} value
  * @returns {Boolean} true & false
- * @description this value is Empty Check
+ * @description Check if this value is empty
  */
 export const isEmpty = (value: string | number | object): boolean => {
   if (value === null) {
@@ -16,4 +16,14 @@ export const isEmpty = (value: string | number | object): boolean => {
   } else {
     return false;
   }
+};
+
+/**
+ * @method isEmpty
+ * @param {String[] | Number[] | Object[]} values
+ * @returns {Boolean} true & false
+ * @description Check if values contain empty
+ */
+export const isSomeEmpty = (values: string[] | number[] | object[]): boolean => {
+  return values.some(v => isEmpty(v));
 };
