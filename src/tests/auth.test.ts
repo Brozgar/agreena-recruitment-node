@@ -7,8 +7,8 @@ import AuthRoute from '@routes/auth.route';
 import userModel from '@models/users.model';
 
 afterAll(async () => {
-  await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
-});
+  await mongoose.connection.close()
+})
 
 describe('Testing Auth', () => {
   describe('[POST] /signup', () => {
