@@ -21,9 +21,10 @@ Create the API containing endpoints:
 
 ##### Requirements
 - Application should be written with strong typing (*TypeScript*)
-- Framework is free of choice
+- Framework is free of choice (NestJS, or others)
+- ORM is free of choice (TypeORM, or others)
 - Authentication should be implemented (*type/package if free of choice*)
 - Seeds should be included (*100 random certificates, 5 random users with certificates and 5 without them*)
-- Tests have to be included
+- Tests have to be included (Jest is preferred)
 
 ### Good luck!
