@@ -3,6 +3,7 @@ import { Db } from "mongodb";
 import { CarbonCertificate, CarbonCertificateStatus } from "@interfaces/carbonCertificates.interface";
 import { User } from "@interfaces/users.interface";
 import mongoose from "mongoose";
+import { hash } from "bcrypt";
 
 
 export class PopulateDbMigration implements MigrationInterface {
@@ -14,7 +15,7 @@ export class PopulateDbMigration implements MigrationInterface {
     while (userCounter < 10) {
       const user: User = {
         email: `test_user_${userCounter + 1}@testing.com`,
-        password: "123"
+        password: await hash("123", 10)
       };
 
       usersData.push(user);

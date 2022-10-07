@@ -7,7 +7,7 @@ afterAll(async () => {
   await mongoose.connection.close()
 });
 
-describe('Testing Index', () => {
+describe('Testing index', () => {
   describe('[GET] /', () => {
     it('response statusCode 200', () => {
       const indexRoute = new IndexRoute();

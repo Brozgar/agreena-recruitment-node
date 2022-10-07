@@ -5,13 +5,13 @@ import App from '@/app';
 import { CreateUserDto } from '@dtos/users.dto';
 import AuthRoute from '@routes/auth.route';
 import userModel from '@models/users.model';
-import { User } from "../interfaces/users.interface";
+import { User } from "@interfaces/users.interface";
 
 afterAll(async () => {
   await mongoose.connection.close()
 })
 
-describe('Testing Auth', () => {
+describe('Testing auth', () => {
   describe('[POST] /signup', () => {
     it('response should have the Create userData', async () => {
       const userData: CreateUserDto = {
