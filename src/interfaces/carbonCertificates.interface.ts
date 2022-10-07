@@ -1,10 +1,11 @@
 import { User } from "@interfaces/users.interface";
+import mongoose from "mongoose";
 
 export interface CarbonCertificate {
-  _id: string;
+  _id?: string;
   country: string;
   status: CarbonCertificateStatus;
-  owner?: User;
+  owner?: string | mongoose.Types.ObjectId | User;
 }
 
 export enum CarbonCertificateStatus {
