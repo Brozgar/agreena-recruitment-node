@@ -6,9 +6,10 @@ import { User } from "@interfaces/users.interface";
 import { CarbonCertificate, CarbonCertificateStatus } from "@interfaces/carbonCertificates.interface";
 import carbonCertificatesModel from "@models/carbonCertificates.model";
 import CarbonCertificatesRoute from "@routes/carbonCertificates.route";
+import AuthService from "../services/auth.service";
+import bcrypt, { hash } from "bcrypt";
 
 describe("Testing carbon certificates", () => {
-  const basePath = "/carbon-certificates";
   let carbonCertificatesRoute;
   let app;
   let server;
@@ -29,7 +30,7 @@ describe("Testing carbon certificates", () => {
     while (userCounter < 10) {
       const user: User = {
         email: `jest_test_user_${userCounter + 1}@testing.com`,
-        password: "123"
+        password: await hash("123", 10),
       };
 
       usersData.push(user);
@@ -66,7 +67,7 @@ describe("Testing carbon certificates", () => {
     await mongoose.connection.close();
   });
 
-  describe(`[GET] ${basePath}`, () => {
+  describe(`[GET] /carbon-certificates`, () => {
     it("response should include only available certificates", async () => {
       const carbonCertificatesRoute = new CarbonCertificatesRoute();
 
@@ -77,8 +78,35 @@ describe("Testing carbon certificates", () => {
       const { data: certificates } = res.body;
       const hasOnlyAvailable = certificates.every(certificate => certificate.status === CarbonCertificateStatus.available);
 
-      expect(certificates.length).toBeGreaterThan(0)
+      expect(certificates.length).toBe(95)
       expect(hasOnlyAvailable).toBe(true)
+      expect(res.status).toBe(200)
+    });
+  });
+
+  describe(`[GET] /carbon-certificates/my`, () => {
+    it('response return only the certificates that belong to the current user', async () => {
+      const carbonCertificatesRoute = new CarbonCertificatesRoute();
+      const userData: User = {
+        email: "jest_test_user_1@testing.com",
+        password: await bcrypt.hash("123", 10)
+      };
+      const user: User = await userModel.findOne({ email: userData.email });
+      const authService = new AuthService();
+
+      const { cookie } = await authService.login({ email: user.email, password: "123" });
+      const res = await request(server).get(`${carbonCertificatesRoute.path}/my`)
+        .set("Cookie", cookie);
+
+      expect(res.status).toBe(200);
+
+      const { data: certificates } = res.body;
+      const hasOnlyOwned = certificates.every(certificate => {
+        return certificate.status === CarbonCertificateStatus.owned && certificate.owner.toString() === user._id.toString();
+      });
+
+      expect(certificates.length).toBe(1)
+      expect(hasOnlyOwned).toBe(true)
       expect(res.status).toBe(200)
     });
   });
