@@ -1,12 +1,12 @@
-import {compare, hash} from 'bcrypt';
-import {sign} from 'jsonwebtoken';
-import {SECRET_KEY} from '@config';
-import {CreateUserDto} from '@dtos/users.dto';
-import {HttpException} from '@exceptions/HttpException';
-import {DataStoredInToken, TokenData} from '@interfaces/auth.interface';
-import {User} from '@interfaces/users.interface';
-import userModel from '@models/users.model';
-import {isEmpty} from '@utils/util';
+import { compare, hash } from "bcrypt";
+import { sign } from "jsonwebtoken";
+import { SECRET_KEY } from "@config";
+import { CreateUserDto } from "@dtos/users.dto";
+import { HttpException } from "@exceptions/HttpException";
+import { DataStoredInToken, TokenData } from "@interfaces/auth.interface";
+import { User, UserResponse } from "@interfaces/users.interface";
+import userModel from "@models/users.model";
+import { isEmpty } from "@utils/util";
 
 class AuthService {
   public async signup(userData: CreateUserDto): Promise<User> {
@@ -19,28 +19,29 @@ class AuthService {
     return await userModel.create({...userData, password: hashedPassword});
   }
 
-  public async login(userData: CreateUserDto): Promise<{ cookie: string; findUser: User }> {
+  public async login(userData: CreateUserDto): Promise<{ cookie: string; user: UserResponse }> {
     if (isEmpty(userData)) throw new HttpException(400, "userData is empty");
 
-    const findUser: User = await userModel.findOne({ email: userData.email });
-    if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
+    const user: User = await userModel.findOne({ email: userData.email });
+    if (!user) throw new HttpException(409, `This email ${userData.email} was not found`);
 
-    const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
+    const isPasswordMatching: boolean = await compare(userData.password, user.password);
     if (!isPasswordMatching) throw new HttpException(409, "Password is not matching");
 
-    const tokenData = this.createToken(findUser);
+    const tokenData = this.createToken(user);
     const cookie = this.createCookie(tokenData);
+    const responseUser: UserResponse = { _id: user._id, email: user.email };
 
-    return { cookie, findUser };
+    return { cookie, user: responseUser };
   }
 
-  public async logout(userData: User): Promise<User> {
+  public async logout(userData: User): Promise<UserResponse> {
     if (isEmpty(userData)) throw new HttpException(400, "userData is empty");
 
-    const findUser: User = await userModel.findOne({ email: userData.email, password: userData.password });
-    if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
+    const user: User = await userModel.findOne({ email: userData.email, password: userData.password });
+    if (!user) throw new HttpException(409, `This email ${userData.email} was not found`);
 
-    return findUser;
+    return { _id: user._id, email: user.email };
   }
 
   public createToken(user: User): TokenData {

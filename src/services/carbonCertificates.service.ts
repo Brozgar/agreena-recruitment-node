@@ -1,7 +1,8 @@
-import {HttpException} from '@exceptions/HttpException';
+import { HttpException } from "@exceptions/HttpException";
 import { isEmpty, isSomeEmpty } from "@utils/util";
 import carbonCertificatesModel from "@models/carbonCertificates.model";
 import { CarbonCertificate, CarbonCertificateStatus } from "@interfaces/carbonCertificates.interface";
+import { User } from "@interfaces/users.interface";
 
 class CarbonCertificatesService {
   public async findAllAvailable(): Promise<CarbonCertificate[]> {
@@ -14,18 +15,25 @@ class CarbonCertificatesService {
     return carbonCertificatesModel.find({ owner: userId });
   }
 
-  public async transfer(certificateId: string, fromUserId: string, toUserId: string): Promise<CarbonCertificate> {
-    if (isSomeEmpty([certificateId, fromUserId, toUserId])) throw new HttpException(400, "Missing parameters");
+  public async transfer(certificateId: string, currentUserId: string, toUserId: string): Promise<CarbonCertificate> {
+    if (isSomeEmpty([certificateId, currentUserId, toUserId])) throw new HttpException(400, "Missing parameters");
 
     // We also check the ownership here to obscure for security
-    const certificate = await carbonCertificatesModel.findOne({ _id: certificateId, owner: fromUserId });
+    const certificate = await carbonCertificatesModel.findOne({ _id: certificateId, owner: currentUserId });
     if (isEmpty(certificate)) throw new HttpException(400, "Certificate not found");
 
+    const selectFields = {
+      country: 1,
+      status: 1,
+      owner: 1
+    }
     const updateData = {
       owner: toUserId,
-      status: CarbonCertificateStatus.transferred,
+      status: CarbonCertificateStatus.transferred
     };
-    const updatedCertificate: CarbonCertificate = await carbonCertificatesModel.findByIdAndUpdate(certificateId, { updateData });
+    const updatedCertificate: CarbonCertificate = await carbonCertificatesModel
+      .findByIdAndUpdate(certificateId, updateData)
+      .select(selectFields);
     if (!updatedCertificate) throw new HttpException(409, "Couldn't transfer the certificate");
 
     return updatedCertificate;

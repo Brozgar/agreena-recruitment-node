@@ -6,6 +6,8 @@ export interface CarbonCertificate {
   country: string;
   status: CarbonCertificateStatus;
   owner?: string | mongoose.Types.ObjectId | User;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export enum CarbonCertificateStatus {

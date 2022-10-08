@@ -17,11 +17,13 @@ class CarbonCertificate {
   @prop({ ref: () => UserModel })
   public owner?: Ref<User>;
 
+  @prop({ default: new Date(Date.now()) })
   public createdAt?: Date;
 
+  @prop({ default: new Date(Date.now()) })
   public updatedAt?: Date;
 }
 
-const CarbonCertificateModel = getModelForClass(CarbonCertificate);
+const CarbonCertificateModel = getModelForClass(CarbonCertificate, { schemaOptions: { timestamps: true } });
 
 export default CarbonCertificateModel;

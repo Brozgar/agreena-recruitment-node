@@ -18,7 +18,7 @@ class CarbonCertificatesController {
 
   public getMyCertificates = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
-      const { _id: currentUserId } = req.user;
+      const currentUserId = req.user._id.toString();
       const findOneUserData: CarbonCertificate[] = await this.certificateService.findByUserId(currentUserId);
 
       res.status(200).json({ data: findOneUserData, message: 'findMy' });
@@ -29,9 +29,9 @@ class CarbonCertificatesController {
 
   public transferOne = async (req: RequestWithUser, res: Response, next: NextFunction) => {
     try {
-      const { _id: currentUserId } = req.user;
       const { id: certificateId } = req.params;
       const { toUserId } = req.body;
+      const currentUserId = req.user._id.toString();
       const updatedCertificateData: CarbonCertificate = await this.certificateService.transfer(certificateId, currentUserId, toUserId);
 
       res.status(200).json({ data: updatedCertificateData, message: 'transferred' });

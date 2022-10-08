@@ -15,7 +15,9 @@ export class PopulateDbMigration implements MigrationInterface {
     while (userCounter < 10) {
       const user: User = {
         email: `test_user_${userCounter + 1}@testing.com`,
-        password: await hash("123", 10)
+        password: await hash("123", 10),
+        createdAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now()),
       };
 
       usersData.push(user);
@@ -31,7 +33,9 @@ export class PopulateDbMigration implements MigrationInterface {
     while (certificatesCounter < 100) {
       const certificate: CarbonCertificate = {
         country: countries[Math.floor(Math.random() * countries.length)],
-        status: CarbonCertificateStatus.available
+        status: CarbonCertificateStatus.available,
+        createdAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now()),
       };
 
       if (certificatesCounter < userIdsWithCertificates.length) {
