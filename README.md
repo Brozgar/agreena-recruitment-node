@@ -1,30 +1,17 @@
-![Agreena](https://agreena.com/wp-content/uploads/2021/06/agreena-logo.svg)
+# NodeJS recruitment test task solution notes
 
-# NodeJS recruitment test task
+[typescript-express-starter](https://www.npmjs.com/package/typescript-express-starter) was used as a boilerplate.
 
-### Carbon Certificates application API
-Create the API containing endpoints:
-1. Login
-2. List of available Carbon certificates (*no owner*)
-3. List of owned Carbon certificates (*owned by current user*)
-4. Transfer my own Carbon certificate to the another existing user (*based on the User ID parameter*)
+For quick local deployment just run the following commands (assuming Docker and NodeJS are already installed):
 
-##### Data informations
-**Carbon certificate** should contain the following data:
-- Unique ID
-- Country
-- Status:
-  - `available` (*no owner*)
-  - `owned` (*owner is present and certificate hasn't been transferred*)
-  - `transferred` (*owner is present and certificate has been transferred from one owner to another*)
-- Owner (*relation to existing user, can be empty*)
+- `docker-compose up -d`
 
-##### Requirements
-- Application should be written with strong typing (*TypeScript*)
-- Framework is free of choice (NestJS, or others)
-- ORM is free of choice (TypeORM, or others)
-- Authentication should be implemented (*type/package if free of choice*)
-- Seeds should be included (*100 random certificates, 5 random users with certificates and 5 without them*)
-- Tests have to be included (Jest is preferred)
+- `npm install`
 
-### Good luck!
+- `npm run dev`
+
+Tests can be run with `npm run test`.
+
+To populate the DB run `npm run migrate:up`. After that you can use `test_user_1@testing.com` (for other users just change the number up to 10) and `123` as the password.
+
+For simple documentation on available methods and quick testing Swagger can be accessed at [http://localhost:3000/api-docs/](http://localhost:3000/api-docs/) once the server is running
