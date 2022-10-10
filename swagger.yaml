@@ -91,8 +91,8 @@ paths:
         500:
           description: 'Server Error'
 
-# [PUT] carbon-certificates/id
-  /carbon-certificates/{id}:
+# [POST] carbon-certificates/:id/transfer
+  /carbon-certificates/{id}/transfer:
     put:
       tags:
         - carbonCertificates
@@ -104,7 +104,7 @@ paths:
           required: true
         - name: body
           in: body
-          description: Certificate data
+          description: Data for the transfer
           required: true
           schema:
             type: object

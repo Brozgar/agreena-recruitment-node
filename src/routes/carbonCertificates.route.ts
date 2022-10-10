@@ -17,7 +17,7 @@ class CarbonCertificatesRoute implements Routes {
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.certificatesController.getAllAvailable);
     this.router.get(`${this.path}/my`, authMiddleware, this.certificatesController.getMyCertificates);
-    this.router.put(`${this.path}/:id`, authMiddleware, validationMiddleware(TransferCarbonCertificateDto, 'body', true), this.certificatesController.transferOne);
+    this.router.post(`${this.path}/:id/transfer`, authMiddleware, validationMiddleware(TransferCarbonCertificateDto, 'body', true), this.certificatesController.transferOne);
   }
 }
 

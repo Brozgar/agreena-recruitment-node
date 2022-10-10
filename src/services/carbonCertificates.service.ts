@@ -2,7 +2,6 @@ import { HttpException } from "@exceptions/HttpException";
 import { isEmpty, isSomeEmpty } from "@utils/util";
 import carbonCertificatesModel from "@models/carbonCertificates.model";
 import { CarbonCertificate, CarbonCertificateStatus } from "@interfaces/carbonCertificates.interface";
-import { User } from "@interfaces/users.interface";
 
 class CarbonCertificatesService {
   public async findAllAvailable(): Promise<CarbonCertificate[]> {
@@ -32,7 +31,7 @@ class CarbonCertificatesService {
       status: CarbonCertificateStatus.transferred
     };
     const updatedCertificate: CarbonCertificate = await carbonCertificatesModel
-      .findByIdAndUpdate(certificateId, updateData)
+      .findByIdAndUpdate(certificateId, updateData, {new: true})
       .select(selectFields);
     if (!updatedCertificate) throw new HttpException(409, "Couldn't transfer the certificate");
 
