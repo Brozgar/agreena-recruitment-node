@@ -1,8 +1,8 @@
-import { mongoMigrateCli } from 'mongo-migrate-ts';
-import { dbConnection } from '@databases';
+import { mongoMigrateCli } from "mongo-migrate-ts";
+import { dbConnection } from "@databases";
 
 mongoMigrateCli({
   uri: dbConnection,
   migrationsDir: __dirname,
-  migrationsCollection: 'migrations_collection',
+  migrationsCollection: "migrations_collection"
 });

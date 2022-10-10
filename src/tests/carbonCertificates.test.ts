@@ -35,7 +35,7 @@ describe("Testing carbon certificates", () => {
     while (userCounter < 10) {
       const user: User = {
         email: `jest_test_user_${userCounter + 1}@testing.com`,
-        password: await hash("123", 10),
+        password: await hash("123", 10)
       };
 
       usersData.push(user);
@@ -83,13 +83,13 @@ describe("Testing carbon certificates", () => {
       const { data: certificates } = res.body;
       const hasOnlyAvailable = certificates.every(certificate => certificate.status === CarbonCertificateStatus.available);
 
-      expect(certificates.length).toBe(95)
-      expect(hasOnlyAvailable).toBe(true)
+      expect(certificates.length).toBe(95);
+      expect(hasOnlyAvailable).toBe(true);
     });
   });
 
   describe(`[GET] /carbon-certificates/my`, () => {
-    it('response return only the certificates that belong to the current user', async () => {
+    it("response return only the certificates that belong to the current user", async () => {
       const carbonCertificatesRoute = new CarbonCertificatesRoute();
       const user: User = await userModel.findOne({ email: "jest_test_user_1@testing.com" });
 
@@ -104,13 +104,13 @@ describe("Testing carbon certificates", () => {
         return certificate.status === CarbonCertificateStatus.owned && certificate.owner.toString() === user._id.toString();
       });
 
-      expect(certificates.length).toBe(1)
-      expect(hasOnlyOwned).toBe(true)
+      expect(certificates.length).toBe(1);
+      expect(hasOnlyOwned).toBe(true);
     });
   });
 
   describe(`[GET] /carbon-certificates/:id/transfer`, () => {
-    it('should transfer the certificate to another user', async () => {
+    it("should transfer the certificate to another user", async () => {
       const carbonCertificatesRoute = new CarbonCertificatesRoute();
       const userFrom: User = await userModel.findOne({ email: "jest_test_user_1@testing.com" });
       const userTo: User = await userModel.findOne({ email: "jest_test_user_2@testing.com" });
@@ -122,15 +122,15 @@ describe("Testing carbon certificates", () => {
       const res = await request(server)
         .post(`${carbonCertificatesRoute.path}/${certificateTOTransfer._id}/transfer`)
         .send({ toUserId: userTo._id })
-        .set("Cookie", cookie)
+        .set("Cookie", cookie);
 
       expect(res.status).toBe(200);
 
       const { data: updatedCertificate } = res.body;
 
-      expect(updatedCertificate.status).toBe(CarbonCertificateStatus.transferred)
-      expect(updatedCertificate.owner.toString()).toBe(userTo._id.toString())
-      expect(res.status).toBe(200)
+      expect(updatedCertificate.status).toBe(CarbonCertificateStatus.transferred);
+      expect(updatedCertificate.owner.toString()).toBe(userTo._id.toString());
+      expect(res.status).toBe(200);
     });
   });
 });

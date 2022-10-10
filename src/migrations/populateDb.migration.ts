@@ -17,7 +17,7 @@ export class PopulateDbMigration implements MigrationInterface {
         email: `test_user_${userCounter + 1}@testing.com`,
         password: await hash("123", 10),
         createdAt: new Date(Date.now()),
-        updatedAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now())
       };
 
       usersData.push(user);
@@ -35,7 +35,7 @@ export class PopulateDbMigration implements MigrationInterface {
         country: countries[Math.floor(Math.random() * countries.length)],
         status: CarbonCertificateStatus.available,
         createdAt: new Date(Date.now()),
-        updatedAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now())
       };
 
       if (certificatesCounter < userIdsWithCertificates.length) {

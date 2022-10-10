@@ -25,13 +25,13 @@ class CarbonCertificatesService {
       country: 1,
       status: 1,
       owner: 1
-    }
+    };
     const updateData = {
       owner: toUserId,
       status: CarbonCertificateStatus.transferred
     };
     const updatedCertificate: CarbonCertificate = await carbonCertificatesModel
-      .findByIdAndUpdate(certificateId, updateData, {new: true})
+      .findByIdAndUpdate(certificateId, updateData, { new: true })
       .select(selectFields);
     if (!updatedCertificate) throw new HttpException(409, "Couldn't transfer the certificate");
 

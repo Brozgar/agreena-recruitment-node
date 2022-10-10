@@ -16,7 +16,7 @@ class AuthService {
     if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
 
     const hashedPassword = await hash(userData.password, 10);
-    return await userModel.create({...userData, password: hashedPassword});
+    return await userModel.create({ ...userData, password: hashedPassword });
   }
 
   public async login(userData: CreateUserDto): Promise<{ cookie: string; user: UserResponse }> {
